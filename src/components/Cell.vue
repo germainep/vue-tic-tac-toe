@@ -1,16 +1,37 @@
 <template>
-
+    <td class='cell' @click='strike'>{{mark}}</td>
 </template>
 
 <script>
     export default {
+        props: ['name'],
         data () {
+            return {
+                frozen: false,
+                mark: ''
+            }
+        },
+        methods: {
+            strike () {
+                if(!this.frozen) {
+                    //get either X or O from the Grid component
+                    this.mark = this.$parent.activePlayer
 
+                    this.frozen = true
+
+                    //fires an event to noitfy the Grid component that a mark is placed
+                    Event.$emit('strike', this.name)
+                }
+            },
+
+            created () {
+                Event.$on('freeze', () => this.frozen = true)
+            }
         }
     }
 </script>
 
-<style lang=scss>
+<style>
 .cell {
     width: 33.3333%;
     height: 90px;
