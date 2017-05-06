@@ -13,7 +13,7 @@
         },
         methods: {
             strike () {
-                if(!this.frozen) {
+                if(! this.frozen) {
                     //get either X or O from the Grid component
                     this.mark = this.$parent.activePlayer
 
@@ -22,12 +22,16 @@
                     //fires an event to noitfy the Grid component that a mark is placed
                     Event.$emit('strike', this.name)
                 }
-            },
-
-            created () {
-                Event.$on('freeze', () => this.frozen = true)
             }
-        }
+        },
+        created () {
+                Event.$on('freeze', () => this.frozen = true),
+                Event.$on('clearCells', () => {
+                    this.mark = ''
+
+                    this.frozen = false
+                })
+            }
     }
 </script>
 

@@ -56,6 +56,7 @@
         methods: {
             changePlayer () {
                 this.activePlayer = this.nonActivePlayer
+                this.gameStatusMessage = `${this.activePlayer}'s turn`
             },
 
             changeGameStatus () {
@@ -64,19 +65,16 @@
                 } else if (this.moves === 9) {
                     return 'draw'
                 }
-                console.log(this.checkForWin())
                 return 'turn'
             },
             checkForWin () {
                 for (let i = 0; i< this.winConditions.length; i++) {
                     let wc = this.winConditions[i]
                     let cells = this.cells
-
+    
                     if(this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])){
-                        console.log(cells)
                         return true
                     }
-                    console.log(cells)
                     return false
                 }
         
@@ -84,12 +82,14 @@
             
             areEqual () {
                 var len = arguments.length;
+                console.log(len)
 
                 for (var i = 1; i < len; i++){
+                    
                     if(arguments[i] === '' || arguments[i] !== arguments[i-1]){
-                        return false;
+                        return false
                     }
-                return true;
+                        return true
                 }
             },
 
@@ -106,14 +106,17 @@
 
         created () {
             Event.$on('strike', (cellNumber) => {
-                console.log(this.cellNumber)
                 this.cells[cellNumber] = this.activePlayer
 
                 this.moves++
 
                 this.gameStatus = this.changeGameStatus()
-                console.log(this.gameStatus)
+                
                 this.changePlayer()
+            }),
+
+            Event.$on('gridReset', () =>{
+                Object.assign(this.$data, this.$options.data())
             })
         },
         
@@ -127,20 +130,22 @@
         },
 
         watch: {
-            gameStatus () {
-                if (this.gameStatus === 'win') {
+            gameStatus() {
+                if(this.gameStatus === 'win') {
                     this.gameStatusColor = 'statusWin'
                     this.gameStatusMessage = `${this.activePlayer} Wins !!`
                     return
-                } else if (this.gameStatus === 'draw') {
+                } else if(this.gameStatus === 'draw') {
                     this.gameStatusColor = 'statusDraw'
                     this.gameStatusMessage = 'Draw !!'
                     return
-                } 
+                }
+                
                 this.gameStatusMessage = `${this.activePlayer}'s turn`
+                }
             }
         }
-    }
+    
 
 </script>
 
